@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TestPlatform - 测试用例管理界面设计规范</title>
+    <style>
+        :root {
+            /* Primary Colors */
+            --color-primary: #1677ff;
+            --color-primary-light: #e6f4ff;
+            --color-success: #52c41a;
+            --color-success-light: #f6ffed;
+            --color-warning: #fa8c16;
+            --color-warning-light: #fff7e6;
+            --color-error: #ff4d4f;
+            --color-error-light: #fff2f0;
+
+            /* Neutral Colors */
+            --color-text-primary: #1a1a1a;
+            --color-text-secondary: #333;
+            --color-text-tertiary: #666;
+            --color-text-quaternary: #999;
+            --color-border: #e8e9eb;
+            --color-border-light: #f0f0f0;
+            --color-background: #f5f6f7;
+            --color-white: #ffffff;
+            --color-input-border: #d9d9d9;
+
+            /* Typography */
+            --font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+
+            /* Spacing */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 12px;
+            --spacing-lg: 16px;
+            --spacing-xl: 20px;
+            --spacing-2xl: 24px;
+
+            /* Border Radius */
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
+            --radius-full: 999px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--color-background);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-2xl);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #0958d9 100%);
+            color: white;
+            padding: var(--spacing-2xl);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        /* Section */
+        .section {
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-2xl);
+            margin-bottom: var(--spacing-2xl);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            margin: var(--spacing-xl) 0 var(--spacing-md);
+        }
+
+        /* Screenshot Container */
+        .screenshot-container {
+            background: var(--color-background);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+            text-align: center;
+        }
+
+        .screenshot-container img {
+            max-width: 100%;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Color Palette */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-md);
+        }
+
+        .color-item {
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .color-preview {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .color-info {
+            padding: var(--spacing-md);
+            background: white;
+        }
+
+        .color-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .color-value {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--color-text-quaternary);
+        }
+
+        /* Layout Grid */
+        .layout-diagram {
+            background: var(--color-background);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-xl);
+            margin-top: var(--spacing-md);
+        }
+
+        .layout-structure {
+            display: flex;
+            height: 400px;
+            gap: 2px;
+            background: var(--color-border);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+
+        .layout-section {
+            background: white;
+            padding: var(--spacing-md);
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .layout-header {
+            width: 100%;
+            height: 56px;
+            background: var(--color-primary-light);
+        }
+
+        .layout-sidebar-left {
+            width: 260px;
+            background: white;
+        }
+
+        .layout-main {
+            flex: 1;
+            background: white;
+        }
+
+        .layout-sidebar-right {
+            width: 360px;
+            background: white;
+        }
+
+        /* Typography Specs */
+        .typo-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: var(--spacing-md);
+        }
+
+        .typo-table th,
+        .typo-table td {
+            padding: var(--spacing-md);
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .typo-table th {
+            background: var(--color-background);
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--color-text-tertiary);
+        }
+
+        .typo-table td {
+            font-size: 14px;
+        }
+
+        .font-preview {
+            display: inline-block;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background: var(--color-primary-light);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--color-primary);
+        }
+
+        /* Component Specs */
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-md);
+        }
+
+        .component-card {
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+        }
+
+        .component-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: var(--spacing-md);
+            color: var(--color-text-secondary);
+        }
+
+        .component-preview {
+            padding: var(--spacing-lg);
+            background: var(--color-background);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        /* Button Examples */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn-default {
+            background: white;
+            border: 1px solid var(--color-input-border);
+            color: var(--color-text-tertiary);
+        }
+
+        /* Tag Examples */
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+        }
+
+        .tag-blue {
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+        }
+
+        .tag-green {
+            background: var(--color-success-light);
+            color: var(--color-success);
+        }
+
+        .tag-orange {
+            background: var(--color-warning-light);
+            color: var(--color-warning);
+        }
+
+        /* Input Example */
+        .input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--color-input-border);
+            border-radius: var(--radius-md);
+            font-size: 14px;
+        }
+
+        /* Specs Table */
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: var(--spacing-md);
+        }
+
+        .specs-table th,
+        .specs-table td {
+            padding: var(--spacing-md);
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .specs-table th {
+            background: var(--color-background);
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .specs-table td {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        /* Dimensions */
+        .dimension-item {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-md);
+            background: var(--color-background);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .dimension-label {
+            width: 150px;
+            font-weight: 500;
+            color: var(--color-text-tertiary);
+        }
+
+        .dimension-value {
+            font-family: var(--font-mono);
+            color: var(--color-primary);
+        }
+
+        /* Spacing Visual */
+        .spacing-demo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .spacing-box {
+            background: var(--color-primary);
+            height: 20px;
+        }
+
+        .spacing-label {
+            font-size: 13px;
+            color: var(--color-text-tertiary);
+            min-width: 100px;
+        }
+
+        /* Navigation */
+        .nav-list {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 200px;
+        }
+
+        .nav-list ul {
+            list-style: none;
+        }
+
+        .nav-list li {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .nav-list a {
+            color: var(--color-text-tertiary);
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.2s;
+        }
+
+        .nav-list a:hover {
+            color: var(--color-primary);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--color-text-quaternary);
+            font-size: 13px;
+            margin-top: var(--spacing-2xl);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--spacing-md);
+            }
+
+            .color-grid,
+            .component-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .layout-structure {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .layout-sidebar-left,
+            .layout-sidebar-right {
+                width: 100%;
+                height: 100px;
+            }
+
+            .nav-list {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>TestPlatform - 测试用例管理</h1>
+            <p>UI设计规范文档 | Figma File: IzInbpk8dr1n4YKQxEyaAc</p>
+        </header>
+
+        <!-- Design Overview -->
+        <section class="section" id="overview">
+            <h2 class="section-title">设计概览</h2>
+            <div class="screenshot-container">
+                <img src="https://www.figma.com/api/mcp/asset/IzInbpk8dr1n4YKQxEyaAc/screenshot.png" alt="测试用例管理界面截图" onerror="this.parentElement.innerHTML='<div style=\"padding:40px;color:#999;\">截图加载中...<br>请在Figma中导出截图并替换此占位符</div>'">
+            </div>
+            <p style="color: var(--color-text-tertiary); line-height: 1.8;">
+                测试用例管理界面采用经典的三栏布局设计，左侧为项目和用例集导航，中间为核心内容区展示测试用例列表，
+                右侧为选中用例的详细信息面板。整体风格简洁现代，以白色为主背景，蓝色为强调色，
+                适合长时间工作的测试工程师使用。
+            </p>
+        </section>
+
+        <!-- Color Palette -->
+        <section class="section" id="colors">
+            <h2 class="section-title">颜色规范</h2>
+
+            <h3 class="section-subtitle">主色调</h3>
+            <div class="color-grid">
+                <div class="color-item">
+                    <div class="color-preview" style="background: #1677ff;">
+                        <span style="color: white; font-weight: 600;">Primary</span>
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">主色 / 品牌色</div>
+                        <div class="color-value">#1677ff</div>
+                    </div>
+                </div>
+                <div class="color-item">
+                    <div class="color-preview" style="background: #e6f4ff;">
+                        <span style="color: #1677ff; font-weight: 600;">Primary Light</span>
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">主色浅（选中态）</div>
+                        <div class="color-value">#e6f4ff</div>
+                    </div>
+                </div>
+                <div class="color-item">
+                    <div class="color-preview" style="background: #52c41a;">
+                        <span style="color: white; font-weight: 600;">Success</span>
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">成功/已通过</div>
+                        <div class="color-value">#52c41a</div>
+                    </div>
+                </div>
+                <div class="color-item">
+                    <div class="color-preview" style="background: #fa8c16;">
+                        <span style="color: white; font-weight: 600;">Warning</span>
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">警告/中优先级</div>
+                        <div class="color-value">#fa8c16</div>
+                    </div>
+                </div>
+                <div class="color-item">
+                    <div class="color-preview" style="background: #ff4d4f;">
+                        <span style="color: white; font-weight: 600;">Error</span>
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">错误/失败/高优先级</div>
+                        <div class="color-value">#ff4d4f</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="section-subtitle">中性色</h3>
+            <div class="color-grid">
+                <div class="color-item">
+                    <div class="color-preview" style="background: #1a1a1a;">
+                        <span style="color: white; font-size: 12px;">Text Primary</span>
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">主文字</div>
+                        <div class="color-value">#1a1a1a</div>
+                    </div>
+                </div>
+                <div class="color-item">
+                    <div class="color-preview" style="background: #333;">
+                        <span style="color: white; font-size: 12px;">Text Secondary</span>
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">次要文字</div>
+                        <div class="color-value">#333333</div>
+                    </div>
+                </div>
+                <div class="color-item">
+                    <div class="color-preview" style="background: #666;">
+                        <span style="color: white; font-size: 12px;">Text Tertiary</span>
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">辅助文字</div>
+                        <div class="color-value">#666666</div>
+                    </div>
+                </div>
+                <div class="color-item">
+                    <div class="color-preview" style="background: #999;">
+                        <span style="color: white; font-size: 12px;">Text Quaternary</span>
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">占位文字</div>
+                        <div class="color-value">#999999</div>
+                    </div>
+                </div>
+                <div class="color-item">
+                    <div class="color-preview" style="background: #e8e9eb;">
+                        <span style="color: #666; font-size: 12px;">Border</span>
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">边框色</div>
+                        <div class="color-value">#e8e9eb</div>
+                    </div>
+                </div>
+                <div class="color-item">
+                    <div class="color-preview" style="background: #f5f6f7; border: 1px solid #e8e9eb;">
+                        <span style="color: #666; font-size: 12px;">Background</span>
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">背景色</div>
+                        <div class="color-value">#f5f6f7</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="section-subtitle">标签背景色</h3>
+            <div class="color-grid">
+                <div class="color-item">
+                    <div class="color-preview" style="background: #e6f4ff;">
+                        <span style="color: #1677ff; font-size: 12px;">功能测试</span>
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">蓝色标签</div>
+                        <div class="color-value">BG: #e6f4ff / Text: #1677ff</div>
+                    </div>
+                </div>
+                <div class="color-item">
+                    <div class="color-preview" style="background: #f6ffed;">
+                        <span style="color: #52c41a; font-size: 12px;">诊断测试</span>
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">绿色标签</div>
+                        <div class="color-value">BG: #f6ffed / Text: #52c41a</div>
+                    </div>
+                </div>
+                <div class="color-item">
+                    <div class="color-preview" style="background: #fff7e6;">
+                        <span style="color: #fa8c16; font-size: 12px;">网络测试</span>
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">橙色标签</div>
+                        <div class="color-value">BG: #fff7e6 / Text: #fa8c16</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Typography -->
+        <section class="section" id="typography">
+            <h2 class="section-title">字体规范</h2>
+
+            <table class="typo-table">
+                <thead>
+                    <tr>
+                        <th>层级</th>
+                        <th>字号</th>
+                        <th>字重</th>
+                        <th>用途</th>
+                        <th>字体族</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>品牌标题</td>
+                        <td>18px</td>
+                        <td>SemiBold (600)</td>
+                        <td>TestPlatform Logo</td>
+                        <td><span class="font-preview">Inter</span></td>
+                    </tr>
+                    <tr>
+                        <td>导航文字</td>
+                        <td>14px</td>
+                        <td>Medium (500) / Regular (400)</td>
+                        <td>顶部导航菜单</td>
+                        <td><span class="font-preview">Noto Sans SC</span></td>
+                    </tr>
+                    <tr>
+                        <td>主标题</td>
+                        <td>16px</td>
+                        <td>SemiBold (600)</td>
+                        <td>详情面板标题</td>
+                        <td><span class="font-preview">Noto Sans SC</span></td>
+                    </tr>
+                    <tr>
+                        <td>小标题</td>
+                        <td>13px</td>
+                        <td>SemiBold (600)</td>
+                        <td>分组标题、信息标签</td>
+                        <td><span class="font-preview">Noto Sans SC</span></td>
+                    </tr>
+                    <tr>
+                        <td>正文</td>
+                        <td>14px</td>
+                        <td>Regular (400) / Medium (500)</td>
+                        <td>用例名称、操作按钮</td>
+                        <td><span class="font-preview">Noto Sans SC</span></td>
+                    </tr>
+                    <tr>
+                        <td>辅助文字</td>
+                        <td>13px</td>
+                        <td>Regular (400)</td>
+                        <td>描述信息、标签文字</td>
+                        <td><span class="font-preview">Noto Sans SC</span></td>
+                    </tr>
+                    <tr>
+                        <td>极小文字</td>
+                        <td>12px</td>
+                        <td>Regular (400)</td>
+                        <td>时间戳、ID、标签</td>
+                        <td><span class="font-preview">JetBrains Mono</span></td>
+                    </tr>
+                    <tr>
+                        <td>项目标识</td>
+                        <td>12px</td>
+                        <td>Regular (400)</td>
+                        <td>项目缩写徽章</td>
+                        <td><span class="font-preview">Inter</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Layout -->
+        <section class="section" id="layout">
+            <h2 class="section-title">布局规范</h2>
+
+            <h3 class="section-subtitle">整体结构</h3>
+            <div class="layout-diagram">
+                <div class="layout-structure">
+                    <div class="layout-section layout-header" style="height: 56px;">
+                        Header<br>56px
+                    </div>
+                </div>
+                <div style="display: flex; gap: 2px; margin-top: 2px; height: 400px;">
+                    <div class="layout-section layout-sidebar-left">
+                        Left Sidebar<br>260px<br><br>
+                        项目列表<br>用例集
+                    </div>
+                    <div class="layout-section layout-main">
+                        Main Content<br>flex: 1<br><br>
+                        搜索/筛选<br>测试用例表格
+                    </div>
+                    <div class="layout-section layout-sidebar-right">
+                        Right Panel<br>360px<br><br>
+                        用例详情<br>测试步骤
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="section-subtitle">尺寸规格</h3>
+            <div class="dimension-item">
+                <span class="dimension-label">顶部导航栏高度</span>
+                <span class="dimension-value">56px</span>
+            </div>
+            <div class="dimension-item">
+                <span class="dimension-label">左侧边栏宽度</span>
+                <span class="dimension-value">260px</span>
+            </div>
+            <div class="dimension-item">
+                <span class="dimension-label">右侧详情面板宽度</span>
+                <span class="dimension-value">360px</span>
+            </div>
+            <div class="dimension-item">
+                <span class="dimension-label">表格行高</span>
+                <span class="dimension-value">69.5px</span>
+            </div>
+            <div class="dimension-item">
+                <span class="dimension-label">表头高度</span>
+                <span class="dimension-value">43.5px</span>
+            </div>
+            <div class="dimension-item">
+                <span class="dimension-label">导航项高度</span>
+                <span class="dimension-value">36px</span>
+            </div>
+            <div class="dimension-item">
+                <span class="dimension-label">项目卡片高度</span>
+                <span class="dimension-value">40px</span>
+            </div>
+        </section>
+
+        <!-- Spacing -->
+        <section class="section" id="spacing">
+            <h2 class="section-title">间距规范</h2>
+
+            <div class="spacing-demo">
+                <span class="spacing-label">XS (4px)</span>
+                <div class="spacing-box" style="width: 4px;"></div>
+            </div>
+            <div class="spacing-demo">
+                <span class="spacing-label">SM (8px)</span>
+                <div class="spacing-box" style="width: 8px;"></div>
+            </div>
+            <div class="spacing-demo">
+                <span class="spacing-label">MD (12px)</span>
+                <div class="spacing-box" style="width: 12px;"></div>
+            </div>
+            <div class="spacing-demo">
+                <span class="spacing-label">LG (16px)</span>
+                <div class="spacing-box" style="width: 16px;"></div>
+            </div>
+            <div class="spacing-demo">
+                <span class="spacing-label">XL (20px)</span>
+                <div class="spacing-box" style="width: 20px;"></div>
+            </div>
+            <div class="spacing-demo">
+                <span class="spacing-label">2XL (24px)</span>
+                <div class="spacing-box" style="width: 24px;"></div>
+            </div>
+
+            <h3 class="section-subtitle">常用间距模式</h3>
+            <table class="specs-table">
+                <thead>
+                    <tr>
+                        <th>场景</th>
+                        <th>间距值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>页面内边距</td>
+                        <td>16px - 24px</td>
+                    </tr>
+                    <tr>
+                        <td>分组标题与内容间距</td>
+                        <td>12px</td>
+                    </tr>
+                    <tr>
+                        <td>列表项间距</td>
+                        <td>4px</td>
+                    </tr>
+                    <tr>
+                        <td>按钮组间距</td>
+                        <td>8px - 12px</td>
+                    </tr>
+                    <tr>
+                        <td>表格单元格内边距</td>
+                        <td>12px - 16px</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Border Radius -->
+        <section class="section" id="radius">
+            <h2 class="section-title">圆角规范</h2>
+
+            <table class="specs-table">
+                <thead>
+                    <tr>
+                        <th>组件</th>
+                        <th>圆角值</th>
+                        <th>预览</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>大卡片、容器</td>
+                        <td>8px</td>
+                        <td><div style="width: 40px; height: 24px; background: #1677ff; border-radius: 8px;"></div></td>
+                    </tr>
+                    <tr>
+                        <td>按钮、输入框</td>
+                        <td>6px</td>
+                        <td><div style="width: 40px; height: 24px; background: #1677ff; border-radius: 6px;"></div></td>
+                    </tr>
+                    <tr>
+                        <td>小标签、徽章</td>
+                        <td>4px</td>
+                        <td><div style="width: 40px; height: 24px; background: #1677ff; border-radius: 4px;"></div></td>
+                    </tr>
+                    <tr>
+                        <td>步骤序号、圆形按钮</td>
+                        <td>10px / 999px</td>
+                        <td><div style="width: 24px; height: 24px; background: #1677ff; border-radius: 10px;"></div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Components -->
+        <section class="section" id="components">
+            <h2 class="section-title">组件规范</h2>
+
+            <div class="component-grid">
+                <!-- Button -->
+                <div class="component-card">
+                    <div class="component-title">按钮 Button</div>
+                    <div class="component-preview">
+                        <button class="btn btn-primary" style="margin-right: 8px;">+ 新建用例</button>
+                        <button class="btn btn-default">导入</button>
+                    </div>
+                    <table class="specs-table" style="margin-top: 0;">
+                        <tr>
+                            <td>主按钮高度</td>
+                            <td>36px</td>
+                        </tr>
+                        <tr>
+                            <td>次按钮高度</td>
+                            <td>38px</td>
+                        </tr>
+                        <tr>
+                            <td>圆角</td>
+                            <td>6px</td>
+                        </tr>
+                        <tr>
+                            <td>内边距</td>
+                            <td>8px 16px</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Tag -->
+                <div class="component-card">
+                    <div class="component-title">标签 Tag</div>
+                    <div class="component-preview">
+                        <span class="tag tag-blue" style="margin-right: 8px;">功能测试</span>
+                        <span class="tag tag-green" style="margin-right: 8px;">诊断测试</span>
+                        <span class="tag tag-orange">网络测试</span>
+                    </div>
+                    <table class="specs-table" style="margin-top: 0;">
+                        <tr>
+                            <td>高度</td>
+                            <td>24.5px</td>
+                        </tr>
+                        <tr>
+                            <td>圆角</td>
+                            <td>4px</td>
+                        </tr>
+                        <tr>
+                            <td>字号</td>
+                            <td>12px</td>
+                        </tr>
+                        <tr>
+                            <td>水平内边距</td>
+                            <td>10px</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Input -->
+                <div class="component-card">
+                    <div class="component-title">搜索框 Input</div>
+                    <div class="component-preview">
+                        <div style="position: relative;">
+                            <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%);">🔍</span>
+                            <input class="input" type="text" placeholder="搜索测试用例..." style="padding-left: 35px;">
+                        </div>
+                    </div>
+                    <table class="specs-table" style="margin-top: 0;">
+                        <tr>
+                            <td>高度</td>
+                            <td>36px</td>
+                        </tr>
+                        <tr>
+                            <td>圆角</td>
+                            <td>6px</td>
+                        </tr>
+                        <tr>
+                            <td>边框</td>
+                            <td>1px solid #d9d9d9</td>
+                        </tr>
+                        <tr>
+                            <td>聚焦边框</td>
+                            <td>#1677ff</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Table -->
+                <div class="component-card">
+                    <div class="component-title">表格 Table</div>
+                    <div class="component-preview">
+                        <div style="background: white; border: 1px solid #e8e9eb; border-radius: 8px; overflow: hidden;">
+                            <div style="background: #fafafa; padding: 12px 16px; border-bottom: 1px solid #e8e9eb; font-size: 13px; font-weight: 600; color: #666;">
+                                表头样式
+                            </div>
+                            <div style="padding: 16px; font-size: 14px; color: #333;">
+                                行内容样式
+                            </div>
+                        </div>
+                    </div>
+                    <table class="specs-table" style="margin-top: 0;">
+                        <tr>
+                            <td>表头背景</td>
+                            <td>#fafafa</td>
+                        </tr>
+                        <tr>
+                            <td>表头文字色</td>
+                            <td>#666</td>
+                        </tr>
+                        <tr>
+                            <td>行分割线</td>
+                            <td>1px solid #f0f0f0</td>
+                        </tr>
+                        <tr>
+                            <td>行高</td>
+                            <td>69.5px</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Project Item -->
+                <div class="component-card">
+                    <div class="component-title">项目卡片 Project Card</div>
+                    <div class="component-preview">
+                        <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #e6f4ff; border-radius: 6px;">
+                            <div style="width: 20px; height: 20px; background: #1677ff; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px;">BC</div>
+                            <span style="font-size: 14px; color: #1677ff;">BCM 控制器测试</span>
+                        </div>
+                    </div>
+                    <table class="specs-table" style="margin-top: 0;">
+                        <tr>
+                            <td>高度</td>
+                            <td>40px</td>
+                        </tr>
+                        <tr>
+                            <td>圆角</td>
+                            <td>6px</td>
+                        </tr>
+                        <tr>
+                            <td>徽章尺寸</td>
+                            <td>20x20px</td>
+                        </tr>
+                        <tr>
+                            <td>选中态背景</td>
+                            <td>#e6f4ff</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Test Step -->
+                <div class="component-card">
+                    <div class="component-title">测试步骤 Test Step</div>
+                    <div class="component-preview">
+                        <div style="display: flex; gap: 12px; padding: 10px 0;">
+                            <div style="width: 20px; height: 20px; background: #1677ff; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; flex-shrink: 0;">1</div>
+                            <div>
+                                <div style="font-size: 13px; color: #333; margin-bottom: 4px;">设置点火开关为 ON</div>
+                                <div style="font-size: 12px; color: #666;">期望：系统上电自检通过</div>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="specs-table" style="margin-top: 0;">
+                        <tr>
+                            <td>序号徽章</td>
+                            <td>20x20px, 圆角10px</td>
+                        </tr>
+                        <tr>
+                            <td>标题字号</td>
+                            <td>13px</td>
+                        </tr>
+                        <tr>
+                            <td>期望值字号</td>
+                            <td>12px</td>
+                        </tr>
+                        <tr>
+                            <td>步骤间距</td>
+                            <td>12px</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Table Column Specs -->
+        <section class="section" id="table-columns">
+            <h2 class="section-title">表格列规范</h2>
+
+            <table class="specs-table">
+                <thead>
+                    <tr>
+                        <th>列名</th>
+                        <th>宽度</th>
+                        <th>对齐</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>选择框</td>
+                        <td>16px + 间距</td>
+                        <td>居中</td>
+                        <td>多选用复选框</td>
+                    </tr>
+                    <tr>
+                        <td>ID</td>
+                        <td>80px</td>
+                        <td>左对齐</td>
+                        <td>等宽字体 JetBrains Mono</td>
+                    </tr>
+                    <tr>
+                        <td>用例名称</td>
+                        <td>358px</td>
+                        <td>左对齐</td>
+                        <td>主标题+描述两行显示</td>
+                    </tr>
+                    <tr>
+                        <td>类型</td>
+                        <td>68px</td>
+                        <td>左对齐</td>
+                        <td>彩色标签</td>
+                    </tr>
+                    <tr>
+                        <td>优先级</td>
+                        <td>120px</td>
+                        <td>左对齐</td>
+                        <td>高/中/低，颜色区分</td>
+                    </tr>
+                    <tr>
+                        <td>状态</td>
+                        <td>100px</td>
+                        <td>左对齐</td>
+                        <td>已通过/失败/未执行</td>
+                    </tr>
+                    <tr>
+                        <td>更新日期</td>
+                        <td>120px</td>
+                        <td>左对齐</td>
+                        <td>YYYY-MM-DD</td>
+                    </tr>
+                    <tr>
+                        <td>操作</td>
+                        <td>80px</td>
+                        <td>居中</td>
+                        <td>执行/编辑/更多</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- States -->
+        <section class="section" id="states">
+            <h2 class="section-title">状态规范</h2>
+
+            <h3 class="section-subtitle">测试用例状态</h3>
+            <table class="specs-table">
+                <thead>
+                    <tr>
+                        <th>状态</th>
+                        <th>颜色</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span style="color: #52c41a;">已通过</span></td>
+                        <td>#52c41a</td>
+                        <td>测试执行成功</td>
+                    </tr>
+                    <tr>
+                        <td><span style="color: #ff4d4f;">失败</span></td>
+                        <td>#ff4d4f</td>
+                        <td>测试执行失败</td>
+                    </tr>
+                    <tr>
+                        <td><span style="color: #999;">未执行</span></td>
+                        <td>#999999</td>
+                        <td>尚未执行的用例</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-subtitle">优先级</h3>
+            <table class="specs-table">
+                <thead>
+                    <tr>
+                        <th>优先级</th>
+                        <th>颜色</th>
+                        <th>字重</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span style="color: #ff4d4f; font-weight: 500;">高</span></td>
+                        <td>#ff4d4f</td>
+                        <td>Medium (500)</td>
+                    </tr>
+                    <tr>
+                        <td><span style="color: #fa8c16;">中</span></td>
+                        <td>#fa8c16</td>
+                        <td>Regular (400)</td>
+                    </tr>
+                    <tr>
+                        <td><span style="color: #52c41a;">低</span></td>
+                        <td>#52c41a</td>
+                        <td>Regular (400)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>TestPlatform UI Design Specification</p>
+            <p>Generated from Figma | File Key: IzInbpk8dr1n4YKQxEyaAc</p>
+            <p style="margin-top: 8px;">创建时间: 2026-03-11</p>
+        </footer>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-list">
+        <ul>
+            <li><a href="#overview">设计概览</a></li>
+            <li><a href="#colors">颜色规范</a></li>
+            <li><a href="#typography">字体规范</a></li>
+            <li><a href="#layout">布局规范</a></li>
+            <li><a href="#spacing">间距规范</a></li>
+            <li><a href="#radius">圆角规范</a></li>
+            <li><a href="#components">组件规范</a></li>
+            <li><a href="#table-columns">表格列规范</a></li>
+            <li><a href="#states">状态规范</a></li>
+        </ul>
+    </nav>
+</body>
+</html>
